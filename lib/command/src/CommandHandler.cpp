@@ -8,7 +8,6 @@ CommandHandler::CommandHandler(PacketSerial *packetSerial, ADC *adc)
 
 void CommandHandler::handleCommand(const Command &cmd)
 {
-    this->sendAck();
     switch (cmd.type)
     {
     case CMD_GET_VERSION:
@@ -30,12 +29,6 @@ void CommandHandler::handleCommand(const Command &cmd)
         this->sendErr(0x11);
         break;
     }
-}
-
-void CommandHandler::sendAck()
-{
-    uint8_t response[1] = {ACK};
-    this->packetSerial->send(response, sizeof(response));
 }
 
 void CommandHandler::sendErr(uint8_t errCode)

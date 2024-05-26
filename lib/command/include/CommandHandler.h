@@ -19,7 +19,6 @@ private:
 public:
     CommandHandler(PacketSerial *packetSerial, ADC *adc);
     void handleCommand(const Command &cmd);
-    virtual void sendAck();
     virtual void sendErr(uint8_t errCode);
     virtual void sendResponse(uint8_t cmd, const uint8_t *data, size_t length);
     void handleGetVersion();

@@ -6,7 +6,6 @@
 
 const uint8_t STX = 0x02;
 const uint8_t ETX = 0x03;
-const uint8_t ACK = 0x06;
 const uint8_t SERTX = 0xFE;
 const uint8_t EERTX = 0xFD;
 
