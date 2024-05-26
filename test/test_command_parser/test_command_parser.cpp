@@ -51,6 +51,34 @@ void test_parseCommand_invalidFrame(void) {
     TEST_ASSERT_EQUAL_UINT8(0, cmd.paramLength);
 }
 
+void test_parseCommand_startPrm(void) {
+    uint8_t buffer[] = {STX, CMD_START_PRM, ETX};
+    Command cmd = parseCommand(buffer, 3);
+    TEST_ASSERT_EQUAL_UINT8(CMD_START_PRM, cmd.type);
+}
+
+void test_parseCommand_stopPrm(void) {
+    uint8_t buffer[] = {STX, CMD_STOP_PRM, ETX};
+    Command cmd = parseCommand(buffer, 3);
+    TEST_ASSERT_EQUAL_UINT8(CMD_STOP_PRM, cmd.type);
+}
+
+void test_parseCommand_setPrm(void) {
+    int16_t value = 200; // 200 ms
+    uint8_t buffer[] = {STX, CMD_SET_PRR, highByte(value), lowByte(value), ETX};
+    Command cmd = parseCommand(buffer, 5);
+    TEST_ASSERT_EQUAL_UINT8(CMD_SET_PRR, cmd.type);
+    TEST_ASSERT_EQUAL_UINT8(2, cmd.paramLength);
+    TEST_ASSERT_EQUAL_UINT8(highByte(value), cmd.params[0]);
+    TEST_ASSERT_EQUAL_UINT8(lowByte(value), cmd.params[1]);
+}
+
+void test_parseCommand_getPrm(void) {
+    uint8_t buffer[] = {STX, CMD_GET_PRR, ETX};
+    Command cmd = parseCommand(buffer, 3);
+    TEST_ASSERT_EQUAL_UINT8(CMD_GET_PRR, cmd.type);
+}
+
 // Main test runner
 void setup() {
     UNITY_BEGIN();
@@ -60,6 +88,10 @@ void setup() {
     RUN_TEST(test_parseCommand_unknown);
     RUN_TEST(test_parseCommand_withParams);
     RUN_TEST(test_parseCommand_invalidFrame);
+    RUN_TEST(test_parseCommand_startPrm);
+    RUN_TEST(test_parseCommand_stopPrm);
+    RUN_TEST(test_parseCommand_setPrm);
+    RUN_TEST(test_parseCommand_getPrm);
 
     UNITY_END();
 }
