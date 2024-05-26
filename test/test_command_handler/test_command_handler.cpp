@@ -137,24 +137,11 @@ void test_handleCommand_startPrm(void)
     // clean up buffer
     memset(testBuffer, 0, sizeof(testBuffer));
 
-    String debugMessage = "";
-    char message[256];
-
     while (millis() - timer <= duration)
     {
         pollingManager.update();
         if (testBuffer[0] != 0x00)
         {
-            debugMessage = "";
-            for (int i = 0; i < sizeof(expectedResponse); i++)
-            {
-                debugMessage += expectedResponse[i];
-                debugMessage += ',';
-            }
-            debugMessage += '\n';
-            memcpy(message, debugMessage.c_str(), debugMessage.length() + 1);
-            TEST_ASSERT_MESSAGE(true, message);
-
             TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, testBuffer, sizeof(expectedResponse));
             memset(testBuffer, 0, sizeof(testBuffer));
             count++;
