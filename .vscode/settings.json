@@ -1,0 +1,9 @@
+{
+    "cmake.configureOnOpen": true,
+    "[markdown]": {
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "yzhang.markdown-all-in-one"
+    },
+    "cmake.sourceDirectory": "${workspaceFolder}/.pio/libdeps/esp32dev/Adafruit BusIO",
+    "C_Cpp.errorSquiggles": "disabled"
+}
