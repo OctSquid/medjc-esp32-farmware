@@ -28,6 +28,18 @@ Command parseCommand(const uint8_t* buffer, size_t size) {
     case 0x31:
       cmd.type = CMD_GET_SME;
       break;
+    case 0x40:
+      cmd.type = CMD_START_PRM;
+      break;
+    case 0x41:
+      cmd.type = CMD_STOP_PRM;
+      break;
+    case 0x42:
+      cmd.type = CMD_SET_PRR;
+      break;
+    case 0x43:
+      cmd.type = CMD_GET_PRR;
+      break;
     default:
       cmd.type = CMD_UNKNOWN;
       break;

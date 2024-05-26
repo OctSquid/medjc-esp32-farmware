@@ -16,6 +16,10 @@ enum CommandType
     CMD_GET_CONNECTIONS = 0x20,
     CMD_GET_ME = 0x30,
     CMD_GET_SME = 0x31,
+    CMD_START_PRM = 0x40,
+    CMD_STOP_PRM = 0x41,
+    CMD_SET_PRR = 0x42,
+    CMD_GET_PRR = 0x43,
     CMD_UNKNOWN
 };
 

@@ -4,10 +4,12 @@
 #include <CommandParser.h>
 #include <CommandHandler.h>
 #include <PacketSerial.h>
+#include <PollingManager.h>
 
 PacketSerial packetSerial;
 ADC adc;
 CommandHandler commandHandler(&packetSerial, &adc);
+PollingManager pollingManager(&commandHandler, &adc);
 
 void onPacketReceived(const uint8_t* buffer, size_t size) {
   Command cmd = parseCommand(buffer, size);
@@ -26,4 +28,5 @@ void setup() {
 
 void loop() {
   packetSerial.update();
+  pollingManager.update();
 }

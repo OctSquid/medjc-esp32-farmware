@@ -6,6 +6,11 @@ CommandHandler::CommandHandler(PacketSerial *packetSerial, ADC *adc)
     this->adc = adc;
 }
 
+void CommandHandler::setPollingManager(PollingManager *pollingManager)
+{
+    this->pollingManager = pollingManager;
+}
+
 void CommandHandler::handleCommand(const Command &cmd)
 {
     switch (cmd.type)
@@ -25,6 +30,18 @@ void CommandHandler::handleCommand(const Command &cmd)
     case CMD_GET_SME:
         this->handleGetSME();
         break;
+    case CMD_START_PRM:
+        this->handleStartPRM();
+        break;
+    case CMD_STOP_PRM:
+        this->handleStopPRM();
+        break;
+    case CMD_SET_PRR:
+        this->handleSetPRRate(cmd.params, cmd.paramLength);
+        break;
+    case CMD_GET_PRR:
+        this->handleGetPRRate();
+        break;
     default:
         this->sendErr(0x11);
         break;
@@ -39,7 +56,7 @@ void CommandHandler::sendErr(uint8_t errCode)
 
 void CommandHandler::sendResponse(uint8_t cmd, const uint8_t *data, size_t length)
 {
-    uint8_t response[16] = {STX, cmd};
+    uint8_t response[32] = {STX, cmd};
     memcpy(response + 2, data, length);
     response[length + 2] = ETX;
     this->packetSerial->send(response, length + 3);
@@ -106,4 +123,23 @@ void CommandHandler::handleGetSME()
         data[2 * i + 1] = lowByte(value);
     }
     this->sendResponse(CMD_GET_SME, data, 8);
+};
+
+void CommandHandler::handleStartPRM() {
+    this->pollingManager->start();
+};
+
+void CommandHandler::handleStopPRM() {
+    this->pollingManager->stop();
+};
+
+void CommandHandler::handleSetPRRate(const uint8_t *params, size_t length) {
+    int16_t rate = (params[0] << 8) | params[1];
+    this->pollingManager->setInterval(rate);
+};
+
+void CommandHandler::handleGetPRRate() {
+    int16_t rate = this->pollingManager->getInterval();
+    uint8_t data[2] = {highByte(rate), lowByte(rate)};
+    this->sendResponse(CMD_GET_PRR, data, 2);
 };
