@@ -141,7 +141,6 @@ void test_handleCommand_startPrm(void)
 
     while (millis() - timer <= duration)
     {
-        pollingManager.update();
         if (testBuffer[0] != 0x00)
         {
             TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedPollingReport, testBuffer, sizeof(expectedPollingReport) - 5);
@@ -162,10 +161,8 @@ void test_handleCommand_stopPrm(void)
     pollingManager.setInterval(100);
 
     pollingManager.start();
-    pollingManager.update();
 
     commandHandler.handleCommand(cmd);
-    pollingManager.update();
 
     uint8_t expectedResponse[] = {0x02, 0x41, 0x03};
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, testBuffer, sizeof(expectedResponse));
