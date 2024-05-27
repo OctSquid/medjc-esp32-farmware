@@ -1,47 +1,58 @@
 #include <PollingManager.h>
 #include <Version.h>
 
-PollingManager::PollingManager(CommandHandler *commandHandler, ADC *adc) {
+PollingManager::PollingManager(CommandHandler *commandHandler, ADC *adc)
+{
     this->commandHandler = commandHandler;
     this->commandHandler->setPollingManager(this);
     this->adc = adc;
 }
 
-bool PollingManager::isRunning() {
+bool PollingManager::isRunning()
+{
     return this->_isRunning;
 }
 
-void PollingManager::setInterval(int16_t _interval) {
+void PollingManager::setInterval(int16_t _interval)
+{
     this->_interval = _interval;
 }
 
-int16_t PollingManager::getInterval() {
+int16_t PollingManager::getInterval()
+{
     return this->_interval;
 }
 
-void PollingManager::start() {
+void PollingManager::start()
+{
     this->_timer = millis();
     this->_isRunning = true;
 }
 
-void PollingManager::stop() {
+void PollingManager::stop()
+{
     this->_timer = 0;
     this->_isRunning = false;
 }
 
-void PollingManager::update() {
-    if (!this->_isRunning) {
+void PollingManager::update()
+{
+    if (!this->_isRunning)
+    {
         return;
     }
 
-    if (millis() - this->_timer >= this->_interval) {
+    if (millis() - this->_timer >= this->_interval)
+    {
         this->sendReport();
         this->_timer = millis();
     }
 }
 
-void PollingManager::sendReport() {
-    uint8_t data[18];
+void PollingManager::sendReport()
+{
+    uint8_t data[22];
+    uint32_t time = millis();
 
     // base voltage
     int16_t baseVoltage = this->adc->readBaseVoltage();
@@ -66,8 +77,12 @@ void PollingManager::sendReport() {
         // SME
         data[2 * i + 10] = highByte(smeValue);
         data[2 * i + 11] = lowByte(smeValue);
-
     }
-
-    this->commandHandler->sendResponse(CMD_GET_PR, data, 18);
+    // time
+    uint32_t delta = millis() - time;
+    data[18] = (delta >> 24) & 0xFF;
+    data[19] = (delta >> 16) & 0xFF;
+    data[20] = (delta >> 8) & 0xFF;
+    data[21] = delta & 0xFF;
+    this->commandHandler->sendResponse(CMD_GET_PR, data, 22);
 }
