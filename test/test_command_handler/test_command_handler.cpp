@@ -124,9 +124,12 @@ void test_handleCommand_startPrm(void)
     pollingManager.setInterval(interval);
     commandHandler.handleCommand(cmd);
 
-    u_int8_t expectedResponse[] = {
+    uint8_t expectedResponse[] = {0x02, 0x40, 0x03};
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, testBuffer, sizeof(expectedResponse));
+
+    u_int8_t expectedPollingReport[] = {
         0x02,
-        0x40,
+        0x4F,
         VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH,
         highByte(32767), lowByte(32767),
         0x01, 0x01, 0x00, 0x00,
@@ -142,7 +145,7 @@ void test_handleCommand_startPrm(void)
         pollingManager.update();
         if (testBuffer[0] != 0x00)
         {
-            TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, testBuffer, sizeof(expectedResponse));
+            TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedPollingReport, testBuffer, sizeof(expectedPollingReport));
             memset(testBuffer, 0, sizeof(testBuffer));
             count++;
         }
@@ -164,13 +167,18 @@ void test_handleCommand_stopPrm(void)
 
     commandHandler.handleCommand(cmd);
     pollingManager.update();
+
+    uint8_t expectedResponse[] = {0x02, 0x41, 0x03};
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, testBuffer, sizeof(expectedResponse));
     TEST_ASSERT_TRUE(!pollingManager.isRunning());
 }
 
 void test_handleCommand_setPRRate(void)
 {
-    Command cmd = { CMD_SET_PRR, {0x00, 0x64}, 0x02};
+    Command cmd = {CMD_SET_PRR, {0x00, 0x64}, 0x02};
     commandHandler.handleCommand(cmd);
+    uint8_t expectedResponse[] = {0x02, 0x42, 0x03};
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, testBuffer, sizeof(expectedResponse));
     TEST_ASSERT_EQUAL_UINT16(100, pollingManager.getInterval());
 }
 
@@ -180,6 +188,22 @@ void test_handleCommand_getPRRate(void)
     pollingManager.setInterval(100);
     commandHandler.handleCommand(cmd);
     uint8_t expectedResponse[] = {0x02, 0x43, 0x00, 0x64, 0x03};
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, testBuffer, sizeof(expectedResponse));
+}
+
+void test_handleCommand_getPR(void)
+{
+    Command cmd = {CMD_GET_PR};
+    commandHandler.handleCommand(cmd);
+    uint8_t expectedResponse[] = {
+        0x02,
+        0x4F,
+        VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH,
+        highByte(32767), lowByte(32767),
+        0x01, 0x01, 0x00, 0x00,
+        highByte(1000), lowByte(1000), highByte(1001), lowByte(1001), 0x00, 0x00, 0x00, 0x00,
+        highByte(2000), lowByte(2000), highByte(2001), lowByte(2001), 0x00, 0x00, 0x00, 0x00,
+        0x03};
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, testBuffer, sizeof(expectedResponse));
 }
 
@@ -198,6 +222,7 @@ void setup()
     RUN_TEST(test_handleCommand_stopPrm);
     RUN_TEST(test_handleCommand_setPRRate);
     RUN_TEST(test_handleCommand_getPRRate);
+    RUN_TEST(test_handleCommand_getPR);
 
     UNITY_END();
 }

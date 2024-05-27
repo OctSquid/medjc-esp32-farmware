@@ -79,6 +79,12 @@ void test_parseCommand_getPrm(void) {
     TEST_ASSERT_EQUAL_UINT8(CMD_GET_PRR, cmd.type);
 }
 
+void test_parseCommand_getPr(void) {
+    uint8_t buffer[] = {STX, CMD_GET_PR, ETX};
+    Command cmd = parseCommand(buffer, 3);
+    TEST_ASSERT_EQUAL_UINT8(CMD_GET_PR, cmd.type);
+}
+
 // Main test runner
 void setup() {
     UNITY_BEGIN();
@@ -92,6 +98,7 @@ void setup() {
     RUN_TEST(test_parseCommand_stopPrm);
     RUN_TEST(test_parseCommand_setPrm);
     RUN_TEST(test_parseCommand_getPrm);
+    RUN_TEST(test_parseCommand_getPr);
 
     UNITY_END();
 }
