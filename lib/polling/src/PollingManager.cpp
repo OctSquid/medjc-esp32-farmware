@@ -41,41 +41,33 @@ void PollingManager::update() {
 }
 
 void PollingManager::sendReport() {
-    uint8_t data[25];
-
-    // version
-    data[0] = VERSION_MAJOR;
-    data[1] = VERSION_MINOR;
-    data[2] = VERSION_PATCH;
+    uint8_t data[18];
 
     // base voltage
     int16_t baseVoltage = this->adc->readBaseVoltage();
-    data[3] = highByte(baseVoltage);
-    data[4] = lowByte(baseVoltage);
+    data[0] = highByte(baseVoltage);
+    data[1] = lowByte(baseVoltage);
 
     for (int i = 0; i < 4; ++i)
     {
-        bool isConnected = this->adc->isConnected(i);
         int16_t meValue = 0;
         int16_t smeValue = 0;
 
-        if (isConnected)
+        if (this->adc->isConnected(i))
         {
             meValue = this->adc->readME(i);
             smeValue = this->adc->readSME(i);
         }
 
-        // is connected
-        data[i + 5] = isConnected ? 0x01 : 0x00;
-
         // ME
-        data[2 * i + 9] = highByte(meValue);
-        data[2 * i + 10] = lowByte(meValue);
+        data[2 * i + 2] = highByte(meValue);
+        data[2 * i + 3] = lowByte(meValue);
 
         // SME
-        data[2 * i + 17] = highByte(smeValue);
-        data[2 * i + 18] = lowByte(smeValue);
+        data[2 * i + 10] = highByte(smeValue);
+        data[2 * i + 11] = lowByte(smeValue);
+
     }
 
-    this->commandHandler->sendResponse(CMD_GET_PR, data, sizeof(data));
+    this->commandHandler->sendResponse(CMD_GET_PR, data, 18);
 }
