@@ -130,9 +130,10 @@ void test_handleCommand_startPrm(void)
     u_int8_t expectedPollingReport[] = {
         0x02,
         0x4F,
-        highByte(32767), lowByte(32767), // 2
+        highByte(32767), lowByte(32767),                                                      // 2
         highByte(1000), lowByte(1000), highByte(1001), lowByte(1001), 0x00, 0x00, 0x00, 0x00, // 8
         highByte(2000), lowByte(2000), highByte(2001), lowByte(2001), 0x00, 0x00, 0x00, 0x00, // 8
+        0x00, 0x00, 0x00, 0x00,                                                               // time stamp
         0x03};
 
     // clean up buffer
@@ -143,7 +144,7 @@ void test_handleCommand_startPrm(void)
         pollingManager.update();
         if (testBuffer[0] != 0x00)
         {
-            TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedPollingReport, testBuffer, sizeof(expectedPollingReport));
+            TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedPollingReport, testBuffer, sizeof(expectedPollingReport) - 5);
             memset(testBuffer, 0, sizeof(testBuffer));
             count++;
         }
@@ -192,15 +193,18 @@ void test_handleCommand_getPRRate(void)
 void test_handleCommand_getPR(void)
 {
     Command cmd = {CMD_GET_PR};
+    uint32_t time = millis();
     commandHandler.handleCommand(cmd);
     uint8_t expectedResponse[] = {
         0x02,
         0x4F,
-        highByte(32767), lowByte(32767), // 2
+        highByte(32767), lowByte(32767),                                                      // 2
         highByte(1000), lowByte(1000), highByte(1001), lowByte(1001), 0x00, 0x00, 0x00, 0x00, // 8
         highByte(2000), lowByte(2000), highByte(2001), lowByte(2001), 0x00, 0x00, 0x00, 0x00, // 8
+        0x00, 0x00, 0x00, 0x00,          // time stamp
         0x03};
-    TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, testBuffer, sizeof(expectedResponse));
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, testBuffer, sizeof(expectedResponse) - 5);
+    TEST_ASSERT_LESS_OR_EQUAL(1, (u_int32_t)(testBuffer[18] << 24 | testBuffer[19] << 16 | testBuffer[20] << 8 | testBuffer[21]) - time);
 }
 
 void setup()
