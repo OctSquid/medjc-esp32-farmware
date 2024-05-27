@@ -27,6 +27,8 @@ void setup() {
 }
 
 void loop() {
-  packetSerial.update();
-  pollingManager.update();
+  while(1){
+    packetSerial.update();
+    pollingManager.update();
+  }
 }
