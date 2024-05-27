@@ -5,6 +5,7 @@ ADC::ADC()
     for (int i = 0; i < 4; ++i)
     {
         ads[i] = Adafruit_ADS1115();
+        ads[i].setDataRate(RATE_ADS1115_860SPS);
         connections[i] = 0;
     }
 };
