@@ -15,16 +15,6 @@ PollingManager pollingManager(&commandHandler, &adc);
 TaskHandle_t pollingTaskHandle = NULL;
 TaskHandle_t packetSerialTaskHandle = NULL;
 
-// Task function for pollingManager.update
-void pollingTask(void *parameter)
-{
-  while (true)
-  {
-    pollingManager.update();
-    vTaskDelay(1); // Small delay to allow other tasks to run
-  }
-}
-
 // Task function for packetSerial.update
 void packetSerialTask(void *parameter)
 {
@@ -50,15 +40,6 @@ void setup()
 
   packetSerial.setStream(&Serial);
   packetSerial.setPacketHandler(&onPacketReceived);
-
-  // Create the polling task
-  xTaskCreate(
-      pollingTask,
-      "PollingTask",
-      2048,
-      NULL,
-      1,
-      &pollingTaskHandle);
 
   // Create the packetSerial task
   xTaskCreate(

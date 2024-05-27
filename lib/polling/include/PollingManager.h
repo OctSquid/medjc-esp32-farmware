@@ -1,6 +1,9 @@
 #ifndef POLLING_MANAGER_H
 #define POLLING_MANAGER_H
 
+#include <Ticker.h>
+#include <functional>
+
 #include <stdint.h>
 #include <stddef.h>
 
@@ -12,15 +15,17 @@
 
 class CommandHandler;
 
-// Function declarations
 class PollingManager
 {
 private:
+    static void timerCallback(PollingManager *instance);
+
     CommandHandler *commandHandler;
     ADC *adc;
     int16_t _interval = 100;
-    long _timer = 0;
     bool _isRunning = false;
+    Ticker _ticker;
+
 public:
     PollingManager(CommandHandler *commandHandler, ADC *adc);
     void sendReport();
@@ -29,7 +34,6 @@ public:
     bool isRunning();
     void start();
     void stop();
-    void update();
 };
 
 #endif // POLLING_MANAGER_H

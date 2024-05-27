@@ -25,32 +25,22 @@ int16_t PollingManager::getInterval()
 
 void PollingManager::start()
 {
-    this->_timer = millis();
-    this->_isRunning = true;
+    if (!this->_isRunning)
+    {
+        this->_ticker.attach_ms(this->_interval, timerCallback, this);
+        this->_isRunning = true;
+    }
 }
 
 void PollingManager::stop()
 {
-    this->_timer = 0;
+    this->_ticker.detach();
     this->_isRunning = false;
-}
-
-void PollingManager::update()
-{
-    if (!this->_isRunning)
-    {
-        return;
-    }
-
-    if (millis() - this->_timer >= this->_interval)
-    {
-        this->sendReport();
-        this->_timer = millis();
-    }
 }
 
 void PollingManager::sendReport()
 {
+    // ? Note: It takes about 24 ms to get data from the adc.
     uint8_t data[22];
     uint32_t time = millis();
 
@@ -79,10 +69,14 @@ void PollingManager::sendReport()
         data[2 * i + 11] = lowByte(smeValue);
     }
     // time
-    uint32_t delta = millis() - time;
-    data[18] = (delta >> 24) & 0xFF;
-    data[19] = (delta >> 16) & 0xFF;
-    data[20] = (delta >> 8) & 0xFF;
-    data[21] = delta & 0xFF;
+    data[18] = (time >> 24) & 0xFF;
+    data[19] = (time >> 16) & 0xFF;
+    data[20] = (time >> 8) & 0xFF;
+    data[21] = time & 0xFF;
     this->commandHandler->sendResponse(CMD_GET_PR, data, 22);
+}
+
+void PollingManager::timerCallback(PollingManager *instance)
+{
+    instance->sendReport();
 }
