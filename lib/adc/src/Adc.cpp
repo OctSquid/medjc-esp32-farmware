@@ -37,6 +37,6 @@ int16_t ADC::readME(uint8_t index)
 
 int16_t ADC::readSME(uint8_t index)
 {
-    int16_t value = ads[index].readADC_SingleEnded(3);
+    int16_t value = ads[index].readADC_SingleEnded(2);
     return value;
 };
