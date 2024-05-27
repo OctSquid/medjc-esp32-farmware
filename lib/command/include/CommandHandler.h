@@ -34,6 +34,7 @@ public:
     void handleStopPRM();
     void handleSetPRRate(const uint8_t *params, size_t length);
     void handleGetPRRate();
+    void handleGetPR();
 };
 
 #endif // COMMAND_HANDLER_H

@@ -20,6 +20,7 @@ enum CommandType
     CMD_STOP_PRM = 0x41,
     CMD_SET_PRR = 0x42,
     CMD_GET_PRR = 0x43,
+    CMD_GET_PR = 0x4F,
     CMD_UNKNOWN
 };
 

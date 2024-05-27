@@ -77,5 +77,5 @@ void PollingManager::sendReport() {
         data[2 * i + 18] = lowByte(smeValue);
     }
 
-    this->commandHandler->sendResponse(CMD_START_PRM, data, sizeof(data));
+    this->commandHandler->sendResponse(CMD_GET_PR, data, sizeof(data));
 }
