@@ -11,12 +11,38 @@ ADC adc;
 CommandHandler commandHandler(&packetSerial, &adc);
 PollingManager pollingManager(&commandHandler, &adc);
 
-void onPacketReceived(const uint8_t* buffer, size_t size) {
+// FreeRTOS task handles
+TaskHandle_t pollingTaskHandle = NULL;
+TaskHandle_t packetSerialTaskHandle = NULL;
+
+// Task function for pollingManager.update
+void pollingTask(void *parameter)
+{
+  while (true)
+  {
+    pollingManager.update();
+    vTaskDelay(1); // Small delay to allow other tasks to run
+  }
+}
+
+// Task function for packetSerial.update
+void packetSerialTask(void *parameter)
+{
+  while (true)
+  {
+    packetSerial.update();
+    vTaskDelay(1); // Small delay to allow other tasks to run
+  }
+}
+
+void onPacketReceived(const uint8_t *buffer, size_t size)
+{
   Command cmd = parseCommand(buffer, size);
   commandHandler.handleCommand(cmd);
 }
 
-void setup() {
+void setup()
+{
   Serial.begin(115200);
   Wire.begin();
 
@@ -24,11 +50,27 @@ void setup() {
 
   packetSerial.setStream(&Serial);
   packetSerial.setPacketHandler(&onPacketReceived);
+
+  // Create the polling task
+  xTaskCreate(
+      pollingTask,
+      "PollingTask",
+      2048,
+      NULL,
+      1,
+      &pollingTaskHandle);
+
+  // Create the packetSerial task
+  xTaskCreate(
+      packetSerialTask,
+      "PacketSerialTask",
+      2048,
+      NULL,
+      1,
+      &packetSerialTaskHandle);
 }
 
-void loop() {
-  while(1){
-    packetSerial.update();
-    pollingManager.update();
-  }
+void loop()
+{
+  // Empty loop since tasks are handled by FreeRTOS
 }
