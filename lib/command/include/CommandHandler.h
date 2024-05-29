@@ -20,8 +20,8 @@ private:
 public:
     CommandHandler(PacketSerial *packetSerial);
     void handleCommand(const Command &cmd);
-    void sendErr(uint8_t errCode);
-    void sendResponse(uint8_t cmd, const uint8_t *data, size_t length);
+    virtual void sendErr(uint8_t errCode);
+    virtual void sendResponse(uint8_t cmd, const uint8_t *data, size_t length);
     void handleGetVersion();
     void handleGetBaseVoltage();
     void handleGetConnections();
