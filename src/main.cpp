@@ -35,6 +35,7 @@ void setup()
 {
   Serial.begin(115200);
   Wire.begin();
+  Wire.setClock(800000); // Increase I2C clock speed to 800kHz
 
   adc.begin();
 
