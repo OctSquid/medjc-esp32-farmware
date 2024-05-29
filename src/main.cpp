@@ -9,11 +9,8 @@
 PacketSerial packetSerial;
 ADC adc;
 CommandHandler commandHandler(&packetSerial, &adc);
-PollingManager pollingManager(&commandHandler, &adc);
 
-// FreeRTOS task handles
-TaskHandle_t pollingTaskHandle = NULL;
-TaskHandle_t packetSerialTaskHandle = NULL;
+TaskHandle_t  packetSerialTaskHandle = NULL;
 
 // Task function for packetSerial.update
 void packetSerialTask(void *parameter)
@@ -38,6 +35,8 @@ void setup()
   Wire.setClock(800000); // Increase I2C clock speed to 800kHz
 
   adc.begin();
+
+  PollingManager::init(&commandHandler, &adc);
 
   packetSerial.setStream(&Serial);
   packetSerial.setPacketHandler(&onPacketReceived);

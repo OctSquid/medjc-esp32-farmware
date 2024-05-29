@@ -12,28 +12,28 @@
 #include <CommandParser.h>
 #include <CommandHandler.h>
 #include <Version.h>
+#include <Ticker2.h>
 
 class CommandHandler;
 
-class PollingManager
+class PollingManager final
 {
 private:
-    static void timerCallback(PollingManager *instance);
-
-    CommandHandler *commandHandler;
-    ADC *adc;
-    int16_t _rate = 10;
-    bool _isRunning = false;
-    Ticker _ticker;
+    static CommandHandler *_commandHandler;
+    static ADC *_adc;
+    static int16_t _rate;
+    static volatile bool _isRunning;
+    static Ticker2 _ticker;
 
 public:
-    PollingManager(CommandHandler *commandHandler, ADC *adc);
-    void sendReport();
-    void setRate(int16_t rate);
-    int16_t getRate();
-    bool isRunning();
-    void start();
-    void stop();
+    PollingManager() = delete;
+    static void init(CommandHandler *commandHandler, ADC *adc);
+    static void sendReport();
+    static void setRate(int16_t rate);
+    static int16_t getRate();
+    static bool isRunning();
+    static void start();
+    static void stop();
 };
 
 #endif // POLLING_MANAGER_H

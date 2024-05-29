@@ -16,12 +16,10 @@ class PollingManager;
 class CommandHandler
 {
 private:
-    PacketSerial *packetSerial;
-    PollingManager *pollingManager;
-    ADC *adc;
+    PacketSerial *_packetSerial;
+    ADC *_adc;
 public:
     CommandHandler(PacketSerial *packetSerial, ADC *adc);
-    void setPollingManager(PollingManager *pollingManager);
     void handleCommand(const Command &cmd);
     virtual void sendErr(uint8_t errCode);
     virtual void sendResponse(uint8_t cmd, const uint8_t *data, size_t length);
