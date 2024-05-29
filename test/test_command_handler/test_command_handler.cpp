@@ -19,7 +19,7 @@ void testSend(const uint8_t *buffer, size_t size)
 class MockHandler : public CommandHandler
 {
 public:
-    MockHandler(PacketSerial *packetSerial, ADC *adc) : CommandHandler(packetSerial, adc) {}
+    MockHandler(PacketSerial *packetSerial) : CommandHandler(packetSerial) {}
 
     void sendErr(uint8_t errCode) override
     {
@@ -36,36 +36,8 @@ public:
     }
 };
 
-// Mock ADC class
-class MockADC : public ADC
-{
-public:
-    int16_t readBaseVoltage() override
-    {
-        return 32767; // 5.0 V
-    }
-
-    bool isConnected(uint8_t index) override
-    {
-        return index < 2;
-    }
-
-    int16_t readME(uint8_t index) override
-    {
-        int16_t value = 1000 + index;
-        return value; // Example values
-    }
-
-    int16_t readSME(uint8_t index) override
-    {
-        int16_t value = 2000 + index;
-        return value; // Example values
-    }
-};
-
 PacketSerial packetSerial;
-MockADC mockADC;
-MockHandler commandHandler(&packetSerial, &mockADC);
+MockHandler commandHandler(&packetSerial);
 
 void test_handleCommand_GetVersion(void)
 {
@@ -146,7 +118,6 @@ void test_handleCommand_startPrm(void)
             memset(testBuffer, 0, sizeof(testBuffer));
             count++;
         }
-        delay(1);
     }
 
     PollingManager::stop();
@@ -207,7 +178,7 @@ void setup()
 {
     UNITY_BEGIN();
 
-    PollingManager::init(&commandHandler, &mockADC);
+    PollingManager::init(&commandHandler);
 
     RUN_TEST(test_handleCommand_GetVersion);
     RUN_TEST(test_handleCommand_GetBaseVoltage);
