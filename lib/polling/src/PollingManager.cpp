@@ -1,15 +1,9 @@
 #include <PollingManager.h>
 #include <Version.h>
 
-CommandHandler *PollingManager::_commandHandler = NULL;
 int16_t PollingManager::_rate = 1000;
 Ticker2 PollingManager::_ticker = Ticker2();
 volatile bool PollingManager::_isRunning = false;
-
-void PollingManager::init(CommandHandler *commandHandler)
-{
-    _commandHandler = commandHandler;
-}
 
 bool PollingManager::isRunning()
 {
@@ -85,5 +79,5 @@ void IRAM_ATTR PollingManager::sendReport()
     data[19] = (time >> 16) & 0xFF;
     data[20] = (time >> 8) & 0xFF;
     data[21] = time & 0xFF;
-    _commandHandler->sendResponse(CMD_GET_PR, data, 22);
+    CommandHandler::sendResponse(CMD_GET_PR, data, 22);
 }

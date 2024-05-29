@@ -19,14 +19,12 @@ class CommandHandler;
 class PollingManager final
 {
 private:
-    static CommandHandler *_commandHandler;
     static int16_t _rate;
     static volatile bool _isRunning;
     static Ticker2 _ticker;
 
 public:
     PollingManager() = delete;
-    static void init(CommandHandler *commandHandler);
     static void IRAM_ATTR sendReport();
     static void setRate(int16_t rate);
     static int16_t getRate();

@@ -7,7 +7,6 @@
 #include <PollingManager.h>
 
 PacketSerial packetSerial;
-CommandHandler commandHandler(&packetSerial);
 
 TaskHandle_t  packetSerialTaskHandle = NULL;
 
@@ -24,7 +23,7 @@ void packetSerialTask(void *parameter)
 void onPacketReceived(const uint8_t *buffer, size_t size)
 {
   Command cmd = parseCommand(buffer, size);
-  commandHandler.handleCommand(cmd);
+  CommandHandler::handleCommand(cmd);
 }
 
 void setup()
@@ -35,7 +34,7 @@ void setup()
 
   ADC::begin();
 
-  PollingManager::init(&commandHandler);
+  CommandHandler::init(&packetSerial);
 
   packetSerial.setStream(&Serial);
   packetSerial.setPacketHandler(&onPacketReceived);
