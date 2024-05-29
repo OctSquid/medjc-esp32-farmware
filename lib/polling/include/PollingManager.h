@@ -28,7 +28,7 @@ private:
 public:
     PollingManager() = delete;
     static void init(CommandHandler *commandHandler, ADC *adc);
-    static void sendReport();
+    static void IRAM_ATTR sendReport();
     static void setRate(int16_t rate);
     static int16_t getRate();
     static bool isRunning();

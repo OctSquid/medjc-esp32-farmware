@@ -52,7 +52,7 @@ void PollingManager::stop()
     }
 }
 
-void PollingManager::sendReport()
+void IRAM_ATTR PollingManager::sendReport()
 {
     // ? Note: It takes about 24 ms to get data from the adc.
     uint8_t data[22];
