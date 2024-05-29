@@ -1,9 +1,13 @@
 #include <CommandHandler.h>
 
 PacketSerial *CommandHandler::_packetSerial = nullptr;
+uint8_t CommandHandler::testBuffer[32];
 
 void CommandHandler::init(PacketSerial *packetSerial)
 {
+#ifdef PIO_UNIT_TESTING
+    memset(testBuffer, 0, sizeof(testBuffer));
+#endif
     _packetSerial = packetSerial;
 }
 
@@ -45,22 +49,6 @@ void CommandHandler::handleCommand(const Command &cmd)
         sendErr(0x11);
         break;
     }
-}
-
-void CommandHandler::sendErr(uint8_t errCode)
-{
-    uint8_t errResponse[3] = {SERTX, errCode, EERTX};
-    _packetSerial->send(errResponse, sizeof(errResponse));
-}
-
-void CommandHandler::sendResponse(uint8_t cmd, const uint8_t *data, size_t length)
-{
-    uint8_t response[32] = {STX, cmd};
-    if (length != 0) {
-        memcpy(response + 2, data, length);
-    }
-    response[length + 2] = ETX;
-    _packetSerial->send(response, length + 3);
 }
 
 void CommandHandler::handleGetVersion()
@@ -126,28 +114,33 @@ void CommandHandler::handleGetSME()
     sendResponse(CMD_GET_SME, data, 8);
 };
 
-void CommandHandler::handleStartPRM() {
+void CommandHandler::handleStartPRM()
+{
     PollingManager::start();
     sendResponse(CMD_START_PRM, {}, 0);
 };
 
-void CommandHandler::handleStopPRM() {
+void CommandHandler::handleStopPRM()
+{
     PollingManager::stop();
     sendResponse(CMD_STOP_PRM, {}, 0);
 };
 
-void CommandHandler::handleSetPRRate(const uint8_t *params, size_t length) {
+void CommandHandler::handleSetPRRate(const uint8_t *params, size_t length)
+{
     int16_t rate = (params[0] << 8) | params[1];
     PollingManager::setRate(rate);
     sendResponse(CMD_SET_PRR, {}, 0);
 };
 
-void CommandHandler::handleGetPRRate() {
+void CommandHandler::handleGetPRRate()
+{
     int16_t rate = PollingManager::getRate();
     uint8_t data[2] = {highByte(rate), lowByte(rate)};
     sendResponse(CMD_GET_PRR, data, 2);
 };
 
-void CommandHandler::handleGetPR() {
+void CommandHandler::handleGetPR()
+{
     PollingManager::sendReport();
 };

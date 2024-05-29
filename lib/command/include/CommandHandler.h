@@ -17,12 +17,35 @@ class CommandHandler
 {
 private:
     static PacketSerial *_packetSerial;
+
 public:
+    static uint8_t testBuffer[32];
     CommandHandler() = delete;
     static void init(PacketSerial *packetSerial);
     static void handleCommand(const Command &cmd);
-    static void sendErr(uint8_t errCode);
-    static void sendResponse(uint8_t cmd, const uint8_t *data, size_t length);
+    inline static void sendErr(uint8_t errCode)
+    {
+        uint8_t errResponse[3] = {SERTX, errCode, EERTX};
+#ifdef PIO_UNIT_TESTING
+        memcpy(testBuffer, errResponse, sizeof(errResponse));
+#else
+        _packetSerial->send(errResponse, sizeof(errResponse));
+#endif
+    };
+    inline static void sendResponse(uint8_t cmd, const uint8_t *data, size_t length)
+    {
+        uint8_t response[32] = {STX, cmd};
+        if (length != 0)
+        {
+            memcpy(response + 2, data, length);
+        }
+        response[length + 2] = ETX;
+#ifdef PIO_UNIT_TESTING
+        memcpy(testBuffer, response, length + 3);
+#else
+        _packetSerial->send(response, length + 3);
+#endif
+    };
     static void handleGetVersion();
     static void handleGetBaseVoltage();
     static void handleGetConnections();
