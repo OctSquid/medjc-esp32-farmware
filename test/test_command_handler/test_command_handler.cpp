@@ -117,11 +117,11 @@ void test_handleCommand_startPrm(void)
     u_int8_t count = 0;
     u_long timer = millis();
     int16_t duration = 1000;
-    int16_t interval = 100;
+    int16_t rate = 10;
     Command cmd = {CMD_START_PRM};
 
     // start polling
-    pollingManager.setInterval(interval);
+    pollingManager.setRate(rate);
     commandHandler.handleCommand(cmd);
 
     uint8_t expectedResponse[] = {0x02, 0x40, 0x03};
@@ -152,13 +152,13 @@ void test_handleCommand_startPrm(void)
 
     pollingManager.stop();
 
-    TEST_ASSERT_GREATER_OR_EQUAL(duration / pollingManager.getInterval(), count);
+    TEST_ASSERT_GREATER_OR_EQUAL((int)(duration / 1000 * pollingManager.getRate() * 1.0), count);
 }
 
 void test_handleCommand_stopPrm(void)
 {
     Command cmd = {CMD_STOP_PRM};
-    pollingManager.setInterval(100);
+    pollingManager.setRate(100);
 
     pollingManager.start();
 
@@ -171,17 +171,17 @@ void test_handleCommand_stopPrm(void)
 
 void test_handleCommand_setPRRate(void)
 {
-    Command cmd = {CMD_SET_PRR, {0x00, 0x64}, 0x02};
+    Command cmd = {CMD_SET_PRR, {0x00, 0x64}, 0x02}; // 100 Hz
     commandHandler.handleCommand(cmd);
     uint8_t expectedResponse[] = {0x02, 0x42, 0x03};
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, testBuffer, sizeof(expectedResponse));
-    TEST_ASSERT_EQUAL_UINT16(100, pollingManager.getInterval());
+    TEST_ASSERT_EQUAL_UINT16(100, pollingManager.getRate());
 }
 
 void test_handleCommand_getPRRate(void)
 {
     Command cmd = {CMD_GET_PRR};
-    pollingManager.setInterval(100);
+    pollingManager.setRate(100);
     commandHandler.handleCommand(cmd);
     uint8_t expectedResponse[] = {0x02, 0x43, 0x00, 0x64, 0x03};
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, testBuffer, sizeof(expectedResponse));
