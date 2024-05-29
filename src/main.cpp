@@ -7,8 +7,7 @@
 #include <PollingManager.h>
 
 PacketSerial packetSerial;
-ADC adc;
-CommandHandler commandHandler(&packetSerial, &adc);
+CommandHandler commandHandler(&packetSerial);
 
 TaskHandle_t  packetSerialTaskHandle = NULL;
 
@@ -34,9 +33,9 @@ void setup()
   Wire.begin();
   Wire.setClock(800000); // Increase I2C clock speed to 800kHz
 
-  adc.begin();
+  ADC::begin();
 
-  PollingManager::init(&commandHandler, &adc);
+  PollingManager::init(&commandHandler);
 
   packetSerial.setStream(&Serial);
   packetSerial.setPacketHandler(&onPacketReceived);

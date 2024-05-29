@@ -1,9 +1,8 @@
 #include <CommandHandler.h>
 
-CommandHandler::CommandHandler(PacketSerial *packetSerial, ADC *adc)
+CommandHandler::CommandHandler(PacketSerial *packetSerial)
 {
     this->_packetSerial = packetSerial;
-    this->_adc = adc;
 }
 
 void CommandHandler::handleCommand(const Command &cmd)
@@ -70,7 +69,7 @@ void CommandHandler::handleGetVersion()
 
 void CommandHandler::handleGetBaseVoltage()
 {
-    int16_t value = this->_adc->readBaseVoltage();
+    int16_t value = ADC::readBaseVoltage();
     uint8_t data[2] = {highByte(value), lowByte(value)};
     this->sendResponse(CMD_GET_BASE_VOLTAGE, data, 2);
 }
@@ -80,7 +79,7 @@ void CommandHandler::handleGetConnections()
     uint8_t data[4];
     for (int i = 0; i < 4; ++i)
     {
-        data[i] = this->_adc->isConnected(i) ? 0x01 : 0x00;
+        data[i] = ADC::isConnected(i) ? 0x01 : 0x00;
     }
     this->sendResponse(CMD_GET_CONNECTIONS, data, 4);
 }
@@ -91,9 +90,9 @@ void CommandHandler::handleGetME()
     for (int i = 0; i < 4; ++i)
     {
         int16_t value;
-        if (this->_adc->isConnected(i))
+        if (ADC::isConnected(i))
         {
-            value = this->_adc->readME(i);
+            value = ADC::readME(i);
         }
         else
         {
@@ -111,9 +110,9 @@ void CommandHandler::handleGetSME()
     for (int i = 0; i < 4; ++i)
     {
         int16_t value;
-        if (this->_adc->isConnected(i))
+        if (ADC::isConnected(i))
         {
-            value = this->_adc->readSME(i);
+            value = ADC::readSME(i);
         }
         else
         {

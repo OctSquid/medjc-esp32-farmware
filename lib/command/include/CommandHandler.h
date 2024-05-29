@@ -17,12 +17,11 @@ class CommandHandler
 {
 private:
     PacketSerial *_packetSerial;
-    ADC *_adc;
 public:
-    CommandHandler(PacketSerial *packetSerial, ADC *adc);
+    CommandHandler(PacketSerial *packetSerial);
     void handleCommand(const Command &cmd);
-    virtual void sendErr(uint8_t errCode);
-    virtual void sendResponse(uint8_t cmd, const uint8_t *data, size_t length);
+    void sendErr(uint8_t errCode);
+    void sendResponse(uint8_t cmd, const uint8_t *data, size_t length);
     void handleGetVersion();
     void handleGetBaseVoltage();
     void handleGetConnections();

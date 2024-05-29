@@ -2,15 +2,13 @@
 #include <Version.h>
 
 CommandHandler *PollingManager::_commandHandler = NULL;
-ADC *PollingManager::_adc = NULL;
 int16_t PollingManager::_rate = 1000;
 Ticker2 PollingManager::_ticker = Ticker2();
 volatile bool PollingManager::_isRunning = false;
 
-void PollingManager::init(CommandHandler *commandHandler, ADC *adc)
+void PollingManager::init(CommandHandler *commandHandler)
 {
     _commandHandler = commandHandler;
-    _adc = adc;
 }
 
 bool PollingManager::isRunning()
@@ -59,7 +57,7 @@ void IRAM_ATTR PollingManager::sendReport()
     uint32_t time = micros();
 
     // base voltage
-    int16_t baseVoltage = _adc->readBaseVoltage();
+    int16_t baseVoltage = ADC::readBaseVoltage();
     data[0] = highByte(baseVoltage);
     data[1] = lowByte(baseVoltage);
 
@@ -68,10 +66,10 @@ void IRAM_ATTR PollingManager::sendReport()
         int16_t meValue = 0;
         int16_t smeValue = 0;
 
-        if (_adc->isConnected(i))
+        if (ADC::isConnected(i))
         {
-            meValue = _adc->readME(i);
-            smeValue = _adc->readSME(i);
+            meValue = ADC::readME(i);
+            smeValue = ADC::readSME(i);
         }
 
         // ME
