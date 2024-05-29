@@ -142,12 +142,12 @@ void CommandHandler::handleStopPRM() {
 
 void CommandHandler::handleSetPRRate(const uint8_t *params, size_t length) {
     int16_t rate = (params[0] << 8) | params[1];
-    this->pollingManager->setInterval(rate);
+    this->pollingManager->setRate(rate);
     this->sendResponse(CMD_SET_PRR, {}, 0);
 };
 
 void CommandHandler::handleGetPRRate() {
-    int16_t rate = this->pollingManager->getInterval();
+    int16_t rate = this->pollingManager->getRate();
     uint8_t data[2] = {highByte(rate), lowByte(rate)};
     this->sendResponse(CMD_GET_PRR, data, 2);
 };

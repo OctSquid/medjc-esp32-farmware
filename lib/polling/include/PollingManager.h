@@ -22,15 +22,15 @@ private:
 
     CommandHandler *commandHandler;
     ADC *adc;
-    int16_t _interval = 100;
+    int16_t _rate = 10;
     bool _isRunning = false;
     Ticker _ticker;
 
 public:
     PollingManager(CommandHandler *commandHandler, ADC *adc);
     void sendReport();
-    void setInterval(int16_t _interval);
-    int16_t getInterval();
+    void setRate(int16_t rate);
+    int16_t getRate();
     bool isRunning();
     void start();
     void stop();

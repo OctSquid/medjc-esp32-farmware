@@ -13,21 +13,21 @@ bool PollingManager::isRunning()
     return this->_isRunning;
 }
 
-void PollingManager::setInterval(int16_t _interval)
+void PollingManager::setRate(int16_t rate)
 {
-    this->_interval = _interval;
+    this->_rate = rate;
 }
 
-int16_t PollingManager::getInterval()
+int16_t PollingManager::getRate()
 {
-    return this->_interval;
+    return this->_rate;
 }
 
 void PollingManager::start()
 {
     if (!this->_isRunning)
     {
-        this->_ticker.attach_ms(this->_interval, timerCallback, this);
+        this->_ticker.attach(1.0 / this->_rate, timerCallback, this);
         this->_isRunning = true;
     }
 }
