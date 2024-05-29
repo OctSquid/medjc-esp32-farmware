@@ -40,13 +40,14 @@ void setup()
   packetSerial.setPacketHandler(&onPacketReceived);
 
   // Create the packetSerial task
-  xTaskCreate(
+  xTaskCreateUniversal(
       packetSerialTask,
       "PacketSerialTask",
       2048,
       NULL,
       1,
-      &packetSerialTaskHandle);
+      &packetSerialTaskHandle,
+      APP_CPU_NUM);
 }
 
 void loop()
