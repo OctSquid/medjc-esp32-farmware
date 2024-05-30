@@ -26,9 +26,9 @@ enum CommandType
 
 struct Command
 {
-    CommandType type;
-    uint8_t params[10]; // パラメータを含む場合のためのバッファ
-    size_t paramLength; // パラメータの長さ
+    CommandType type;   /**< Command type. */
+    uint8_t params[10]; /**< Command parameters. */
+    size_t paramLength; /**< Length of the command parameters. */
 };
 
 Command parseCommand(const uint8_t *buffer, size_t size);

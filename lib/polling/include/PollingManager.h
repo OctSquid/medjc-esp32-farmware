@@ -16,17 +16,26 @@
 
 class CommandHandler;
 
+/**
+ * @brief Polling manager class.
+ */
 class PollingManager final
 {
 private:
-    static int16_t _rate;
-    static volatile bool _isRunning;
-    static Ticker2 _ticker;
-    static volatile bool _flag_isr;
+    static int16_t _rate;            /**< Polling rate in Hz. */
+    static volatile bool _isRunning; /**< Flag to indicate if the polling manager is running. */
+    static Ticker2 _ticker;          /**< Ticker object for the polling manager. */
+    static volatile bool _flag_isr;  /**< Flag to indicate if the ISR has been triggered. */
 
 public:
     PollingManager() = delete;
+
     static void IRAM_ATTR sendReport();
+
+    /**
+     * @brief Updates the polling manager.
+     * ! This function must be called in the main loop.
+     */
     static void IRAM_ATTR inline update()
     {
         if (_flag_isr)

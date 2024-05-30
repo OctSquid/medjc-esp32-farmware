@@ -10,7 +10,9 @@ PacketSerial packetSerial;
 
 TaskHandle_t  packetSerialTaskHandle = NULL;
 
-// Task function for packetSerial.update
+/**
+ * @brief Task to handle the PacketSerial communication.
+ */
 void packetSerialTask(void *parameter)
 {
   while (true)
@@ -20,15 +22,24 @@ void packetSerialTask(void *parameter)
   }
 }
 
+/**
+ * @brief Callback function for when a packet is received.
+ * @param buffer The buffer containing the packet.
+ * @param size The size of the packet.
+ */
 void onPacketReceived(const uint8_t *buffer, size_t size)
 {
   Command cmd = parseCommand(buffer, size);
   CommandHandler::handleCommand(cmd);
 }
 
+/**
+ * @brief Setup function.
+ */
 void setup()
 {
   Serial.begin(921600);
+
   Wire.begin();
   Wire.setClock(800000); // Increase I2C clock speed to 800kHz
 
@@ -52,7 +63,6 @@ void setup()
 
 void loop()
 {
-  // Empty loop since tasks are handled by FreeRTOS
   while (1) {
     PollingManager::update();
   }

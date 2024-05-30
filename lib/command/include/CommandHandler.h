@@ -12,17 +12,37 @@
 #include <Version.h>
 
 class PollingManager;
-// Function declarations
+
+/**
+ * @brief Command handler class.
+ */
 class CommandHandler
 {
 private:
-    static PacketSerial *_packetSerial;
+    static PacketSerial *_packetSerial; /**< Pointer to the PacketSerial object. */
 
 public:
-    static uint8_t testBuffer[32];
+    static uint8_t testBuffer[32]; /**< Buffer for testing purposes. */
+
     CommandHandler() = delete;
+
+    /**
+     * @brief Initializes the command handler.
+     * ! This function must be called before any other functions in this class.
+     * @param packetSerial Pointer to the PacketSerial object.
+     */
     static void init(PacketSerial *packetSerial);
+
+    /**
+     * @brief Handles a command.
+     * @param cmd The command to handle.
+     */
     static void handleCommand(const Command &cmd);
+
+    /**
+     * @brief Sends an error response.
+     * @param errCode The error code.
+     */
     static void inline sendErr(uint8_t errCode)
     {
         uint8_t errResponse[3] = {SERTX, errCode, EERTX};
@@ -32,6 +52,13 @@ public:
         _packetSerial->send(errResponse, sizeof(errResponse));
 #endif
     };
+
+    /**
+     * @brief Sends a response.
+     * @param cmd The command.
+     * @param data The data to send.
+     * @param length The length of the data.
+     */
     static void inline sendResponse(uint8_t cmd, const uint8_t *data, size_t length)
     {
         uint8_t response[32] = {STX, cmd};
@@ -46,6 +73,7 @@ public:
         _packetSerial->send(response, length + 3);
 #endif
     };
+
     static void handleGetVersion();
     static void handleGetBaseVoltage();
     static void handleGetConnections();
