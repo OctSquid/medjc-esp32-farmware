@@ -28,7 +28,7 @@ void onPacketReceived(const uint8_t *buffer, size_t size)
 
 void setup()
 {
-  Serial.begin(115200);
+  Serial.begin(921600);
   Wire.begin();
   Wire.setClock(800000); // Increase I2C clock speed to 800kHz
 
@@ -53,4 +53,7 @@ void setup()
 void loop()
 {
   // Empty loop since tasks are handled by FreeRTOS
+  while (1) {
+    PollingManager::update();
+  }
 }
