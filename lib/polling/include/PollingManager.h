@@ -22,10 +22,20 @@ private:
     static int16_t _rate;
     static volatile bool _isRunning;
     static Ticker2 _ticker;
+    static volatile bool _flag_isr;
 
 public:
     PollingManager() = delete;
     static void IRAM_ATTR sendReport();
+    static void IRAM_ATTR inline update()
+    {
+        if (_flag_isr)
+        {
+            _flag_isr = false;
+            sendReport();
+        }
+    };
+    static void IRAM_ATTR onTimer();
     static void setRate(int16_t rate);
     static int16_t getRate();
     static bool isRunning();

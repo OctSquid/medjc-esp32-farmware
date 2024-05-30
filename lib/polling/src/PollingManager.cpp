@@ -4,6 +4,7 @@
 int16_t PollingManager::_rate = 1000;
 Ticker2 PollingManager::_ticker = Ticker2();
 volatile bool PollingManager::_isRunning = false;
+volatile bool PollingManager::_flag_isr = false;
 
 bool PollingManager::isRunning()
 {
@@ -30,7 +31,7 @@ void PollingManager::start()
     if (!_isRunning)
     {
         // Configure hardware timer to call timerISR every second
-        _ticker.attach_us((int)(1000000.0 / _rate), &PollingManager::sendReport);
+        _ticker.attach_us(1000000ULL / _rate, &PollingManager::onTimer);
         _isRunning = true;
     }
 }
@@ -80,4 +81,9 @@ void IRAM_ATTR PollingManager::sendReport()
     data[20] = (time >> 8) & 0xFF;
     data[21] = time & 0xFF;
     CommandHandler::sendResponse(CMD_GET_PR, data, 22);
+}
+
+void PollingManager::onTimer()
+{
+    _flag_isr = true;
 }
