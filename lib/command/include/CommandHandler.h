@@ -23,7 +23,7 @@ public:
     CommandHandler() = delete;
     static void init(PacketSerial *packetSerial);
     static void handleCommand(const Command &cmd);
-    inline static void sendErr(uint8_t errCode)
+    static void inline sendErr(uint8_t errCode)
     {
         uint8_t errResponse[3] = {SERTX, errCode, EERTX};
 #ifdef PIO_UNIT_TESTING
@@ -32,7 +32,7 @@ public:
         _packetSerial->send(errResponse, sizeof(errResponse));
 #endif
     };
-    inline static void sendResponse(uint8_t cmd, const uint8_t *data, size_t length)
+    static void inline sendResponse(uint8_t cmd, const uint8_t *data, size_t length)
     {
         uint8_t response[32] = {STX, cmd};
         if (length != 0)
