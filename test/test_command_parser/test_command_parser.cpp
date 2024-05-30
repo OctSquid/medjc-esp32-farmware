@@ -87,6 +87,7 @@ void test_parseCommand_getPr(void) {
 
 // Main test runner
 void setup() {
+    Serial.begin(921600);
     UNITY_BEGIN();
 
     RUN_TEST(test_parseCommand_getVersion);

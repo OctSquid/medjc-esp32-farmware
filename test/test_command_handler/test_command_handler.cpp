@@ -55,7 +55,7 @@ void test_handleCommand_startPrm(void)
     u_int8_t count = 0;
     u_int64_t timer = micros();
     u_int64_t duration = 1001 * 1000;
-    int16_t rate = 200;
+    int16_t rate = 100;
     Command cmd = {CMD_START_PRM};
 
     // start polling
@@ -79,6 +79,7 @@ void test_handleCommand_startPrm(void)
 
     while (micros() - timer <= duration)
     {
+        PollingManager::update();
         if (CommandHandler::testBuffer[0] != 0x00)
         {
             // TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedPollingReport, CommandHandler::testBuffer, sizeof(expectedPollingReport) - 5);
@@ -143,6 +144,7 @@ void test_handleCommand_getPR(void)
 
 void setup()
 {
+    Serial.begin(921600);
     UNITY_BEGIN();
 
     CommandHandler::init(&packetSerial);
