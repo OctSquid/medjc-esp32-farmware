@@ -1,8 +1,6 @@
 #ifndef VERSION_H
 #define VERSION_H
 
-#include <stdint.h>
-
 #define VERSION_MAJOR 1
 #define VERSION_MINOR 1
 #define VERSION_PATCH 0
