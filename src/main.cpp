@@ -1,14 +1,16 @@
 #include <Wire.h>
+
 #include <Adafruit_ADS1X15.h>
+#include <PacketSerial.h>
+
 #include <Adc.h>
 #include <CommandParser.h>
 #include <CommandHandler.h>
-#include <PacketSerial.h>
 #include <PollingManager.h>
 
 PacketSerial packetSerial;
 
-TaskHandle_t  packetSerialTaskHandle = NULL;
+TaskHandle_t packetSerialTaskHandle = NULL;
 
 /**
  * @brief Task to handle the PacketSerial communication.
@@ -63,7 +65,8 @@ void setup()
 
 void loop()
 {
-  while (1) {
+  while (1)
+  {
     PollingManager::update();
   }
 }

@@ -1,18 +1,17 @@
 #ifndef POLLING_MANAGER_H
 #define POLLING_MANAGER_H
 
-#include <Ticker.h>
-#include <functional>
-
 #include <stdint.h>
 #include <stddef.h>
+#include <functional>
 
 #include <PacketSerial.h>
+#include <Ticker2.h>
+
 #include <Adc.h>
 #include <CommandParser.h>
 #include <CommandHandler.h>
 #include <Version.h>
-#include <Ticker2.h>
 
 class CommandHandler;
 

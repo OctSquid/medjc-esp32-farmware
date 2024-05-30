@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stddef.h>
+
 #include <Adafruit_ADS1X15.h>
 
 const uint8_t addr[4] = {0x48, 0x49, 0x4A, 0x4B};

@@ -1,10 +1,7 @@
 #ifndef TICKER2_H
 #define TICKER2_H
 
-extern "C"
-{
-#include "esp_timer.h"
-}
+#include <esp_timer.h>
 #include <functional>
 
 class Ticker2
