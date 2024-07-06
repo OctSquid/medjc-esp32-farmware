@@ -5,4 +5,5 @@
   (lib (name "NJM2747D")(type "KiCad")(uri "${KIPRJMOD}/lib/NJM2747D/NJM2747D.kicad_sym")(options "")(descr ""))
   (lib (name "NJU7223F33")(type "KiCad")(uri "${KIPRJMOD}/lib/NJU7223F33/NJU7223F33.kicad_sym")(options "")(descr ""))
   (lib (name "MEDJC09")(type "KiCad")(uri "${KIPRJMOD}/lib/MEDJC09/MEDJC09.kicad_sym")(options "")(descr ""))
+  (lib (name "BA033CC0T")(type "KiCad")(uri "${KIPRJMOD}/lib/BA033CC0T/BA033CC0T.kicad_sym")(options "")(descr ""))
 )

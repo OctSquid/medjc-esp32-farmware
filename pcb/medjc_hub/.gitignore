@@ -1,3 +1,10 @@
 medjc_hub-backups/
 
 \#auto_saved_files#
+
+*.kicad_pcb.lck
+
+gbrs/
+
+*.dsn
+*.ses

@@ -1,0 +1,101 @@
+
+(rules PCB medjc_hub
+  (snap_angle 
+    fortyfive_degree
+  )
+  (autoroute_settings
+    (fanout off)
+    (autoroute on)
+    (postroute on)
+    (vias on)
+    (via_costs 50)
+    (plane_via_costs 5)
+    (start_ripup_costs 100)
+    (start_pass_no 382)
+    (layer_rule F.Cu
+      (active on)
+      (preferred_direction horizontal)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 2.8)
+    )
+    (layer_rule B.Cu
+      (active on)
+      (preferred_direction vertical)
+      (preferred_direction_trace_costs 1.0)
+      (against_preferred_direction_trace_costs 1.6)
+    )
+  )
+  (rule
+    (width 400.0)
+    (clearance 200.0)
+    (clearance 100.0 (type smd_to_turn_gap))
+    (clearance 200.0 (type smd))
+    (clearance 200.0 (type "kicad_default"))
+    (clearance 200.0 (type Power))
+    (clearance 200.0 (type kicad))
+  )
+  (padstack "Via[0-1]_600:300_um"
+    (shape
+      (circle F.Cu 600.0 0.0 0.0)
+    )
+    (shape
+      (circle B.Cu 600.0 0.0 0.0)
+    )
+    (attach off)
+  )
+  (via 
+    "Via[0-1]_600:300_um-Power" "Via[0-1]_600:300_um" Power
+  )
+  (via 
+    "Via[0-1]_600:300_um" "Via[0-1]_600:300_um" default
+  )
+  (via 
+    "Via[0-1]_600:300_um-kicad_default" "Via[0-1]_600:300_um" "kicad_default"
+  )
+  (via_rule
+    Power "Via[0-1]_600:300_um-Power"
+  )
+  (via_rule
+    default "Via[0-1]_600:300_um"
+  )
+  (via_rule
+    "kicad_default" "Via[0-1]_600:300_um-kicad_default"
+  )
+  (class default
+    (clearance_class default)
+    (via_rule default)
+    (rule
+      (width 400.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class "kicad_default"
+    GND "Net-(J5-Pin_1)" FME2 "Net-(C11-Pad1)" "Net-(C10-Pad2)" FME1 "Net-(U6-+IN_A)" "Net-(C15-Pad2)"
+    FME3 RAWME1 SME1 "unconnected-(J2-Pin_4-Pad4)" SME2 RAWME2 "unconnected-(J3-Pin_4-Pad4)" SME3
+    RAWME3 "unconnected-(J4-Pin_4-Pad4)" "Net-(U6--IN_A)" "Net-(U6--IN_B)" "Net-(U6-OUT_A)" "Net-(U6-OUT_B)" "Net-(U6-OUT_C)" "Net-(U6--IN_C)"
+    "unconnected-(U1-GPIO6-Pad6)" MOSI "unconnected-(U1-GPIO5-Pad5)" "unconnected-(U1-GPIO3-Pad3)" "unconnected-(U1-GPIO0-Pad0)" "unconnected-(U1-GPIO20-Pad20)" "unconnected-(U1-GPIO1-Pad1)" "unconnected-(U1-GPIO21-Pad21)"
+    "unconnected-(U1-Pad5V)" "unconnected-(U1-GPIO2-Pad2)" SS SCK MISO "unconnected-(U1-GPIO10-Pad10)" "unconnected-(U6-+IN_D-Pad12)" "unconnected-(U6-OUT_D-Pad14)"
+    "unconnected-(U6--IN_D-Pad13)" "unconnected-(U7-CH7-Pad8)"
+    (clearance_class "kicad_default")
+    (via_rule "kicad_default")
+    (rule
+      (width 400.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+  (class Power
+    +3V3 "Net-(D1-A)" "Net-(U2-Vcc)"
+    (clearance_class Power)
+    (via_rule Power)
+    (rule
+      (width 600.0)
+    )
+    (circuit 
+      (use_layer F.Cu B.Cu)
+    )
+  )
+)

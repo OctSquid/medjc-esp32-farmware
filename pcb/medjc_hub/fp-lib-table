@@ -1,0 +1,8 @@
+(fp_lib_table
+  (version 7)
+  (lib (name "BA033CC0T")(type "KiCad")(uri "${KIPRJMOD}/lib/BA033CC0T")(options "")(descr ""))
+  (lib (name "ESP32-C3_SUPERMINI")(type "KiCad")(uri "${KIPRJMOD}/lib/ESP32-C3_SUPERMINI")(options "")(descr ""))
+  (lib (name "MCP3208-CI_P")(type "KiCad")(uri "${KIPRJMOD}/lib/MCP3208-CI_P")(options "")(descr ""))
+  (lib (name "GF063")(type "KiCad")(uri "${KIPRJMOD}/lib/GF063")(options "")(descr ""))
+  (lib (name "LAB-LOGO")(type "KiCad")(uri "${KIPRJMOD}/lib/LAB-LOGO")(options "")(descr ""))
+)
