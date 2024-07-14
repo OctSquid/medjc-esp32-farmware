@@ -1,7 +1,6 @@
 #include <Adc.h>
 
-Adafruit_ADS1115 ADC::_ads[4] = {Adafruit_ADS1115(), Adafruit_ADS1115(), Adafruit_ADS1115(), Adafruit_ADS1115()};
-bool ADC::_connections[4] = {false, false, false, false};
+MCP3208 ADC::_mcp = MCP3208();
 
 void ADC::begin()
 {
@@ -10,8 +9,8 @@ void ADC::begin()
 #else
     for (int i = 0; i < 4; ++i)
     {
-        _ads[i].setDataRate(RATE_ADS1115_860SPS);
-        _connections[i] = _ads[i].begin(addr[i]);
+        SPI.begin(SCK, MISO, MOSI);
+        _mcp.begin(CS);
     }
 #endif
 };
@@ -21,7 +20,7 @@ bool ADC::isConnected(uint8_t index)
 #ifdef PIO_UNIT_TESTING
     return index < 2;
 #else
-    return _connections[index];
+    return index < 3;
 #endif
 };
 
@@ -30,7 +29,7 @@ int16_t ADC::readBaseVoltage()
 #ifdef PIO_UNIT_TESTING
     return 32767;
 #else
-    int16_t value = _ads[0].readADC_SingleEnded(3);
+    int16_t value = _mcp.read(6);
     return value;
 #endif
 };
@@ -41,7 +40,8 @@ int16_t ADC::readME(uint8_t index)
     int16_t value = 1000 + index;
     return value;
 #else
-    int16_t value = _ads[index].readADC_Differential_0_1();
+    int16_t value = _mcp.read(2 * index + 1);
+    if (index >= 3) value = 0;
     return value;
 #endif
 };
@@ -52,7 +52,8 @@ int16_t ADC::readSME(uint8_t index)
     int16_t value = 2000 + index;
     return value;
 #else
-    int16_t value = _ads[index].readADC_SingleEnded(2);
+    int16_t value = _mcp.read(2 * index) - _mcp.maxValue() / 2;
+    if (index >= 3) value = 0;
     return value;
 #endif
 };

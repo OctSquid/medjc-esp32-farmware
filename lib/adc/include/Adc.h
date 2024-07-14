@@ -4,18 +4,22 @@
 #include <stdint.h>
 #include <stddef.h>
 
-#include <Adafruit_ADS1X15.h>
+#include <SPI.h>
 
-const uint8_t addr[4] = {0x48, 0x49, 0x4A, 0x4B};
+#include "MCP_ADC.h"
+
+#define SCK 4
+#define MISO 7
+#define MOSI 8
+#define CS 9
 
 /**
- * @brief ADC class for interfacing with ADS1115 ADC modules.
+ * @brief ADC class for interfacing with MCP3208 ADC modules.
  */
 class ADC
 {
 private:
-    static bool _connections[4];     /**< Array to store the connection status of each ADC module. */
-    static Adafruit_ADS1115 _ads[4]; /**< Array to store the ADS1115 objects for each ADC module. */
+    static MCP3208 _mcp;
 public:
     ADC() = delete;
 

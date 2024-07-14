@@ -60,7 +60,7 @@ void setup()
       NULL,
       1,
       &packetSerialTaskHandle,
-      APP_CPU_NUM);
+      1);
 }
 
 void loop()
