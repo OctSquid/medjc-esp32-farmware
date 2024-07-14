@@ -14,9 +14,9 @@
 | 4    | R1,R2,R13                     | 33kΩ               | 3    | カーボン抵抗     | [1/4W33k](https://akizukidenshi.com/catalog/g/g125333/)    |
 | 6    | J5                            | Conn_01x02_Pin     | 1    | ピンヘッダ       | [PH-1x40SG](https://akizukidenshi.com/catalog/g/g100167/)  |
 | 7    | J2,J3,J4                      | Conn_01x05_Socket  | 3    | ピンソケット     | [FHU-1x42SG](https://akizukidenshi.com/catalog/g/g105779/) |
-| 8    | J1                            | MJ-180P            | 1    | DCジャック       | [MJ-180P](https://akizukidenshi.com/catalog/g/g106514/)    |
+| 8    | J1                            | MJ-179PH           | 1    | DCジャック       | [MJ-179PH](https://akizukidenshi.com/catalog/g/g106568/)   |
 | 9    | D1                            | 1N4007             | 1    | ダイオード       | [1N4007](https://akizukidenshi.com/catalog/g/g100934/)     |
-| 10   | C10,C11,C15                   | 1μF                | 3    | コンデンサ       | [0.1uF50v](https://akizukidenshi.com/catalog/g/g100090/)   |
+| 10   | C10,C11,C15                   | 1μF                | 3    | コンデンサ       | [1uF50v](https://akizukidenshi.com/catalog/g/g104066/)     |
 | 11   | C8,C9,C16                     | 0.47μF             | 3    | コンデンサ       | [0.47uF50v](https://akizukidenshi.com/catalog/g/g115938/)  |
 | 12   | C4                            | 47μF               | 1    | 電源用コンデンサ | [47uF63v](https://akizukidenshi.com/catalog/g/g117403/)    |
 | 13   | C1,C2,C3,C5,C6,C7,C12,C13,C14 | 0.1μF              | 9    | コンデンサ       | [0.1uF50v](https://akizukidenshi.com/catalog/g/g100090/)   |
