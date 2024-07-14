@@ -40,7 +40,7 @@ int16_t ADC::readME(uint8_t index)
     int16_t value = 1000 + index;
     return value;
 #else
-    int16_t value = _mcp.read(2 * index + 1);
+    int16_t value = _mcp.read(2 * index + 1) - _mcp.maxValue() / 2;
     if (index >= 3) value = 0;
     return value;
 #endif
@@ -52,7 +52,7 @@ int16_t ADC::readSME(uint8_t index)
     int16_t value = 2000 + index;
     return value;
 #else
-    int16_t value = _mcp.read(2 * index) - _mcp.maxValue() / 2;
+    int16_t value = _mcp.read(2 * index);
     if (index >= 3) value = 0;
     return value;
 #endif
