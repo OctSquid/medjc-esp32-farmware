@@ -15,6 +15,9 @@ void CommandHandler::handleCommand(const Command &cmd)
 {
     switch (cmd.type)
     {
+    case CMD_PING:
+        handlePing();
+        break;
     case CMD_GET_VERSION:
         handleGetVersion();
         break;
