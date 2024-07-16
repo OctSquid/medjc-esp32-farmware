@@ -11,6 +11,7 @@ const uint8_t EERTX = 0xFD;
 
 enum CommandType
 {
+    CMD_PING = 0x00,
     CMD_GET_VERSION = 0x01,
     CMD_GET_BASE_VOLTAGE = 0x02,
     CMD_GET_CONNECTIONS = 0x20,

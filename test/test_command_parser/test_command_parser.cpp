@@ -14,6 +14,13 @@ void tearDown(void)
     // Clean up after each test
 }
 
+void test_parseCommand_ping(void)
+{
+    uint8_t buffer[] = {STX, CMD_PING, ETX};
+    Command cmd = parseCommand(buffer, 3);
+    TEST_ASSERT_EQUAL_UINT8(CMD_PING, cmd.type);
+}
+
 // Test case to check valid GET_VERSION command
 void test_parseCommand_getVersion(void)
 {

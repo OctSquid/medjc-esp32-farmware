@@ -16,6 +16,9 @@ Command parseCommand(const uint8_t *buffer, size_t size)
 
   switch (commandType)
   {
+  case 0x00:
+    cmd.type = CMD_PING;
+    break;
   case 0x01:
     cmd.type = CMD_GET_VERSION;
     break;

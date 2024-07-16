@@ -74,6 +74,7 @@ public:
 #endif
     };
 
+    static void handlePing();
     static void handleGetVersion();
     static void handleGetBaseVoltage();
     static void handleGetConnections();

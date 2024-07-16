@@ -6,6 +6,15 @@
 
 PacketSerial packetSerial;
 
+void test_handleCommand_ping(void)
+{
+    Command cmd = {CMD_PING};
+    CommandHandler::handleCommand(cmd);
+    uint8_t expectedResponse[] = {0x02, 0x00, 0x03};
+    TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, CommandHandler::testBuffer, sizeof(expectedResponse));
+
+}
+
 void test_handleCommand_GetVersion(void)
 {
     Command cmd = {CMD_GET_VERSION};

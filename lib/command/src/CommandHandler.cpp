@@ -51,6 +51,11 @@ void CommandHandler::handleCommand(const Command &cmd)
     }
 }
 
+void CommandHandler::handlePing()
+{
+    sendResponse(CMD_PING, {}, 0);
+}
+
 void CommandHandler::handleGetVersion()
 {
     uint8_t versionData[3] = {VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH};
