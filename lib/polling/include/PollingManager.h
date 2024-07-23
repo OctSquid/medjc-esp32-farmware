@@ -29,7 +29,7 @@ private:
 public:
     PollingManager() = delete;
 
-    static void IRAM_ATTR sendReport();
+    static void IRAM_ATTR sendReport(uint16_t id);
 
     /**
      * @brief Updates the polling manager.
@@ -40,7 +40,7 @@ public:
         if (_flag_isr)
         {
             _flag_isr = false;
-            sendReport();
+            sendReport(0);
         }
     };
     static void IRAM_ATTR onTimer();

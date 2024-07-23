@@ -54,10 +54,12 @@ Command parseCommand(const uint8_t *buffer, size_t size)
     break;
   }
 
-  if (size > 3)
+  cmd.id = (buffer[2] << 8) | buffer[3];
+
+  if (size > 5)
   {
-    cmd.paramLength = size - 3;
-    memcpy(cmd.params, buffer + 2, cmd.paramLength);
+    cmd.paramLength = size - 5;
+    memcpy(cmd.params, buffer + 4, cmd.paramLength);
   }
 
   return cmd;

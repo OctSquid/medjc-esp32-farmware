@@ -45,7 +45,7 @@ void PollingManager::stop()
     }
 }
 
-void IRAM_ATTR PollingManager::sendReport()
+void IRAM_ATTR PollingManager::sendReport(uint16_t id)
 {
     uint8_t data[22];
     uint32_t time = micros();
@@ -79,7 +79,7 @@ void IRAM_ATTR PollingManager::sendReport()
     data[19] = (time >> 16) & 0xFF;
     data[20] = (time >> 8) & 0xFF;
     data[21] = time & 0xFF;
-    CommandHandler::sendResponse(CMD_GET_PR, data, 22);
+    CommandHandler::sendResponse(CMD_GET_PR, id, data, 22);
 }
 
 void PollingManager::onTimer()

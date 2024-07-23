@@ -22,7 +22,7 @@ private:
     static PacketSerial *_packetSerial; /**< Pointer to the PacketSerial object. */
 
 public:
-    static uint8_t testBuffer[32]; /**< Buffer for testing purposes. */
+    static uint8_t testBuffer[64]; /**< Buffer for testing purposes. */
 
     CommandHandler() = delete;
 
@@ -59,32 +59,32 @@ public:
      * @param data The data to send.
      * @param length The length of the data.
      */
-    static void inline sendResponse(uint8_t cmd, const uint8_t *data, size_t length)
+    static void inline sendResponse(uint8_t cmd, uint16_t id, const uint8_t *data, size_t length)
     {
-        uint8_t response[32] = {STX, cmd};
-        if (length != 0)
+        uint8_t response[64] = {STX, cmd, highByte(id), lowByte(id)};
+        if (length > 0)
         {
-            memcpy(response + 2, data, length);
+            memcpy(response + 4, data, length);
         }
-        response[length + 2] = ETX;
+        response[length + 4] = ETX;
 #ifdef PIO_UNIT_TESTING
-        memcpy(testBuffer, response, length + 3);
+        memcpy(testBuffer, response, length + 5);
 #else
-        _packetSerial->send(response, length + 3);
+        _packetSerial->send(response, length + 5);
 #endif
     };
 
-    static void handlePing();
-    static void handleGetVersion();
-    static void handleGetBaseVoltage();
-    static void handleGetConnections();
-    static void handleGetME();
-    static void handleGetSME();
-    static void handleStartPRM();
-    static void handleStopPRM();
-    static void handleSetPRRate(const uint8_t *params, size_t length);
-    static void handleGetPRRate();
-    static void handleGetPR();
+    static void handlePing(uint16_t id);
+    static void handleGetVersion(uint16_t id);
+    static void handleGetBaseVoltage(uint16_t id);
+    static void handleGetConnections(uint16_t id);
+    static void handleGetME(uint16_t id);
+    static void handleGetSME(uint16_t id);
+    static void handleStartPRM(uint16_t id);
+    static void handleStopPRM(uint16_t id);
+    static void handleSetPRRate(uint16_t id, const uint8_t *params, size_t length);
+    static void handleGetPRRate(uint16_t id);
+    static void handleGetPR(uint16_t id);
 };
 
 #endif // COMMAND_HANDLER_H

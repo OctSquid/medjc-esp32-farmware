@@ -28,6 +28,7 @@ enum CommandType
 struct Command
 {
     CommandType type;   /**< Command type. */
+    uint16_t id;        /**< ID. */
     uint8_t params[10]; /**< Command parameters. */
     size_t paramLength; /**< Length of the command parameters. */
 };

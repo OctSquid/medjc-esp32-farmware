@@ -1,7 +1,7 @@
 #include <CommandHandler.h>
 
 PacketSerial *CommandHandler::_packetSerial = nullptr;
-uint8_t CommandHandler::testBuffer[32];
+uint8_t CommandHandler::testBuffer[64];
 
 void CommandHandler::init(PacketSerial *packetSerial)
 {
@@ -16,37 +16,37 @@ void CommandHandler::handleCommand(const Command &cmd)
     switch (cmd.type)
     {
     case CMD_PING:
-        handlePing();
+        handlePing(cmd.id);
         break;
     case CMD_GET_VERSION:
-        handleGetVersion();
+        handleGetVersion(cmd.id);
         break;
     case CMD_GET_BASE_VOLTAGE:
-        handleGetBaseVoltage();
+        handleGetBaseVoltage(cmd.id);
         break;
     case CMD_GET_CONNECTIONS:
-        handleGetConnections();
+        handleGetConnections(cmd.id);
         break;
     case CMD_GET_ME:
-        handleGetME();
+        handleGetME(cmd.id);
         break;
     case CMD_GET_SME:
-        handleGetSME();
+        handleGetSME(cmd.id);
         break;
     case CMD_START_PRM:
-        handleStartPRM();
+        handleStartPRM(cmd.id);
         break;
     case CMD_STOP_PRM:
-        handleStopPRM();
+        handleStopPRM(cmd.id);
         break;
     case CMD_SET_PRR:
-        handleSetPRRate(cmd.params, cmd.paramLength);
+        handleSetPRRate(cmd.id, cmd.params, cmd.paramLength);
         break;
     case CMD_GET_PRR:
-        handleGetPRRate();
+        handleGetPRRate(cmd.id);
         break;
     case CMD_GET_PR:
-        handleGetPR();
+        handleGetPR(cmd.id);
         break;
     default:
         sendErr(0x11);
@@ -54,35 +54,35 @@ void CommandHandler::handleCommand(const Command &cmd)
     }
 }
 
-void CommandHandler::handlePing()
+void CommandHandler::handlePing(uint16_t id)
 {
-    sendResponse(CMD_PING, {}, 0);
+    sendResponse(CMD_PING, id, {}, 0);
 }
 
-void CommandHandler::handleGetVersion()
+void CommandHandler::handleGetVersion(uint16_t id)
 {
     uint8_t versionData[3] = {VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH};
-    sendResponse(CMD_GET_VERSION, versionData, 3);
+    sendResponse(CMD_GET_VERSION, id, versionData, 3);
 }
 
-void CommandHandler::handleGetBaseVoltage()
+void CommandHandler::handleGetBaseVoltage(uint16_t id)
 {
     int16_t value = ADC::readBaseVoltage();
     uint8_t data[2] = {highByte(value), lowByte(value)};
-    sendResponse(CMD_GET_BASE_VOLTAGE, data, 2);
+    sendResponse(CMD_GET_BASE_VOLTAGE, id, data, 2);
 }
 
-void CommandHandler::handleGetConnections()
+void CommandHandler::handleGetConnections(uint16_t id)
 {
-    uint8_t data[4];
+    uint8_t data[6];
     for (int i = 0; i < 4; ++i)
     {
         data[i] = ADC::isConnected(i) ? 0x01 : 0x00;
     }
-    sendResponse(CMD_GET_CONNECTIONS, data, 4);
+    sendResponse(CMD_GET_CONNECTIONS, id, data, 4);
 }
 
-void CommandHandler::handleGetME()
+void CommandHandler::handleGetME(uint16_t id)
 {
     uint8_t data[8];
     for (int i = 0; i < 4; ++i)
@@ -99,10 +99,10 @@ void CommandHandler::handleGetME()
         data[2 * i] = highByte(value);
         data[2 * i + 1] = lowByte(value);
     }
-    sendResponse(CMD_GET_ME, data, 8);
+    sendResponse(CMD_GET_ME, id, data, 8);
 }
 
-void CommandHandler::handleGetSME()
+void CommandHandler::handleGetSME(uint16_t id)
 {
     uint8_t data[8];
     for (int i = 0; i < 4; ++i)
@@ -119,36 +119,36 @@ void CommandHandler::handleGetSME()
         data[2 * i] = highByte(value);
         data[2 * i + 1] = lowByte(value);
     }
-    sendResponse(CMD_GET_SME, data, 8);
+    sendResponse(CMD_GET_SME, id, data, 8);
 };
 
-void CommandHandler::handleStartPRM()
+void CommandHandler::handleStartPRM(uint16_t id)
 {
     PollingManager::start();
-    sendResponse(CMD_START_PRM, {}, 0);
+    sendResponse(CMD_START_PRM, id, {}, 0);
 };
 
-void CommandHandler::handleStopPRM()
+void CommandHandler::handleStopPRM(uint16_t id)
 {
     PollingManager::stop();
-    sendResponse(CMD_STOP_PRM, {}, 0);
+    sendResponse(CMD_STOP_PRM, id, {}, 0);
 };
 
-void CommandHandler::handleSetPRRate(const uint8_t *params, size_t length)
+void CommandHandler::handleSetPRRate(uint16_t id, const uint8_t *params, size_t length)
 {
     int16_t rate = (params[0] << 8) | params[1];
     PollingManager::setRate(rate);
-    sendResponse(CMD_SET_PRR, {}, 0);
+    sendResponse(CMD_SET_PRR, id, {}, 0);
 };
 
-void CommandHandler::handleGetPRRate()
+void CommandHandler::handleGetPRRate(uint16_t id)
 {
     int16_t rate = PollingManager::getRate();
     uint8_t data[2] = {highByte(rate), lowByte(rate)};
-    sendResponse(CMD_GET_PRR, data, 2);
+    sendResponse(CMD_GET_PRR, id, data, 2);
 };
 
-void CommandHandler::handleGetPR()
+void CommandHandler::handleGetPR(uint16_t id)
 {
-    PollingManager::sendReport();
+    PollingManager::sendReport(id);
 };
