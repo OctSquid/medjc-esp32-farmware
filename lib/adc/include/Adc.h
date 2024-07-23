@@ -36,6 +36,12 @@ public:
     static bool isConnected(uint8_t index);
 
     /**
+     * @brief Reads the values from all ADC modules.
+     * @param readings The array to store the values.
+     */
+    static void readAll(int16_t readings[]);
+
+    /**
      * @brief Reads the base voltage from the ADC module.
      * @return The base voltage value.
      */
@@ -49,10 +55,22 @@ public:
     static int16_t readME(uint8_t index);
 
     /**
+     * @brief Reads the ME (Micro Electrode) values from all ADC modules.
+     * @param readings The array to store the ME values.
+     */
+    static void readMEAll(int16_t readings[]);
+
+    /**
      * @brief Reads the SME (Sub-Micro Electrode) value from the specified ADC module.
      * @param index The index of the ADC module.
      * @return The SME value.
      */
     static int16_t readSME(uint8_t index);
+
+    /**
+     * @brief Reads the SME (Sub-Micro Electrode) values from all ADC modules.
+     * @param readings The array to store the SME values.
+     */
+    static void readSMEAll(int16_t readings[]);
 };
 #endif // ADC_H
