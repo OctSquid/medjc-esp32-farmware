@@ -8,54 +8,54 @@ PacketSerial packetSerial;
 
 void test_handleCommand_ping(void)
 {
-    Command cmd = {CMD_PING};
+    Command cmd = {CMD_PING, 16};
     CommandHandler::handleCommand(cmd);
-    uint8_t expectedResponse[] = {0x02, 0x00, 0x03};
+    uint8_t expectedResponse[] = {0x02, 0x00, 0x00, 0x10, 0x03};
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, CommandHandler::testBuffer, sizeof(expectedResponse));
 
 }
 
 void test_handleCommand_GetVersion(void)
 {
-    Command cmd = {CMD_GET_VERSION};
+    Command cmd = {CMD_GET_VERSION, 16};
     CommandHandler::handleCommand(cmd);
-    uint8_t expectedResponse[] = {0x02, 0x01, VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, 0x03};
+    uint8_t expectedResponse[] = {0x02, 0x01, 0x00, 0x10, VERSION_MAJOR, VERSION_MINOR, VERSION_PATCH, 0x03};
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, CommandHandler::testBuffer, sizeof(expectedResponse));
 }
 
 void test_handleCommand_GetBaseVoltage(void)
 {
-    Command cmd = {CMD_GET_BASE_VOLTAGE};
+    Command cmd = {CMD_GET_BASE_VOLTAGE, 16};
     const int16_t TEST_BASE_VOLTAGE = 32767;
     CommandHandler::handleCommand(cmd);
-    uint8_t expectedResponse[] = {0x02, 0x02, highByte(TEST_BASE_VOLTAGE), lowByte(TEST_BASE_VOLTAGE), 0x03};
+    uint8_t expectedResponse[] = {0x02, 0x02, 0x00, 0x10, highByte(TEST_BASE_VOLTAGE), lowByte(TEST_BASE_VOLTAGE), 0x03};
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, CommandHandler::testBuffer, sizeof(expectedResponse));
 }
 
 void test_handleCommand_GetConnections(void)
 {
-    Command cmd = {CMD_GET_CONNECTIONS};
+    Command cmd = {CMD_GET_CONNECTIONS, 16};
     CommandHandler::handleCommand(cmd);
     // channel 0: 1, channel 1: 1, channel 2: 0, channel 3: 0
-    uint8_t expectedResponse[] = {0x02, 0x20, 0x01, 0x01, 0x00, 0x00, 0x03};
+    uint8_t expectedResponse[] = {0x02, 0x20, 0x00, 0x10, 0x01, 0x01, 0x00, 0x00, 0x03};
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, CommandHandler::testBuffer, sizeof(expectedResponse));
 }
 
 void test_handleCommand_GetME(void)
 {
-    Command cmd = {CMD_GET_ME};
+    Command cmd = {CMD_GET_ME, 16};
     CommandHandler::handleCommand(cmd);
     // channel 0: 1000, channel 1: 1001, channel 2: 0, channel 3: 0
-    uint8_t expectedResponse[] = {0x02, 0x30, 0x03, 0xE8, 0x03, 0xE9, 0x00, 0x00, 0x00, 0x00, 0x03};
+    uint8_t expectedResponse[] = {0x02, 0x30, 0x00, 0x10, 0x03, 0xE8, 0x03, 0xE9, 0x00, 0x00, 0x00, 0x00, 0x03};
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, CommandHandler::testBuffer, sizeof(expectedResponse));
 }
 
 void test_handleCommand_GetSME(void)
 {
-    Command cmd = {CMD_GET_SME};
+    Command cmd = {CMD_GET_SME, 16};
     CommandHandler::handleCommand(cmd);
     // channel 0: 2000, channel 1: 2001, channel 2: 0, channel 3: 0
-    uint8_t expectedResponse[] = {0x02, 0x31, 0x07, 0xD0, 0x07, 0xD1, 0x00, 0x00, 0x00, 0x00, 0x03};
+    uint8_t expectedResponse[] = {0x02, 0x31, 0x00, 0x10, 0x07, 0xD0, 0x07, 0xD1, 0x00, 0x00, 0x00, 0x00, 0x03};
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, CommandHandler::testBuffer, sizeof(expectedResponse));
 }
 
@@ -65,18 +65,19 @@ void test_handleCommand_startPrm(void)
     u_int64_t timer = micros();
     u_int64_t duration = 1001 * 1000;
     int16_t rate = 100;
-    Command cmd = {CMD_START_PRM};
+    Command cmd = {CMD_START_PRM, 16};
 
     // start polling
     PollingManager::setRate(rate);
     CommandHandler::handleCommand(cmd);
 
-    uint8_t expectedResponse[] = {0x02, 0x40, 0x03};
+    uint8_t expectedResponse[] = {0x02, 0x40, 0x00, 0x10, 0x03};
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, CommandHandler::testBuffer, sizeof(expectedResponse));
 
     u_int8_t expectedPollingReport[] = {
         0x02,
         0x4F,
+        0x00, 0x00,
         highByte(32767), lowByte(32767),                                                      // 2
         highByte(1000), lowByte(1000), highByte(1001), lowByte(1001), 0x00, 0x00, 0x00, 0x00, // 8
         highByte(2000), lowByte(2000), highByte(2001), lowByte(2001), 0x00, 0x00, 0x00, 0x00, // 8
@@ -104,44 +105,46 @@ void test_handleCommand_startPrm(void)
 
 void test_handleCommand_stopPrm(void)
 {
-    Command cmd = {CMD_STOP_PRM};
+    Command cmd = {CMD_STOP_PRM, 16};
     PollingManager::setRate(100);
 
     PollingManager::start();
 
     CommandHandler::handleCommand(cmd);
 
-    uint8_t expectedResponse[] = {0x02, 0x41, 0x03};
+    uint8_t expectedResponse[] = {0x02, 0x41, 0x00, 0x10, 0x03};
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, CommandHandler::testBuffer, sizeof(expectedResponse));
     TEST_ASSERT_TRUE(!PollingManager::isRunning());
 }
 
 void test_handleCommand_setPRRate(void)
 {
-    Command cmd = {CMD_SET_PRR, {0x00, 0x64}, 0x02}; // 100 Hz
+    Command cmd = {CMD_SET_PRR, 16, {0x00, 0x64}, 0x02}; // 100 Hz
     CommandHandler::handleCommand(cmd);
-    uint8_t expectedResponse[] = {0x02, 0x42, 0x03};
+    uint8_t expectedResponse[] = {0x02, 0x42, 0x00, 0x10, 0x03};
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, CommandHandler::testBuffer, sizeof(expectedResponse));
     TEST_ASSERT_EQUAL_UINT16(100, PollingManager::getRate());
 }
 
 void test_handleCommand_getPRRate(void)
 {
-    Command cmd = {CMD_GET_PRR};
+    Command cmd = {CMD_GET_PRR, 16};
     PollingManager::setRate(100);
     CommandHandler::handleCommand(cmd);
-    uint8_t expectedResponse[] = {0x02, 0x43, 0x00, 0x64, 0x03};
+    uint8_t expectedResponse[] = {0x02, 0x43, 0x00, 0x10, highByte(100), lowByte(100), 0x03};
+    TEST_ASSERT_EQUAL_UINT8(expectedResponse[6], CommandHandler::testBuffer[6]);
     TEST_ASSERT_EQUAL_UINT8_ARRAY(expectedResponse, CommandHandler::testBuffer, sizeof(expectedResponse));
 }
 
 void test_handleCommand_getPR(void)
 {
-    Command cmd = {CMD_GET_PR};
+    Command cmd = {CMD_GET_PR, 16};
     uint32_t time = millis();
     CommandHandler::handleCommand(cmd);
     uint8_t expectedResponse[] = {
         0x02,
         0x4F,
+        0x00, 0x10,
         highByte(32767), lowByte(32767),                                                      // 2
         highByte(1000), lowByte(1000), highByte(1001), lowByte(1001), 0x00, 0x00, 0x00, 0x00, // 8
         highByte(2000), lowByte(2000), highByte(2001), lowByte(2001), 0x00, 0x00, 0x00, 0x00, // 8
