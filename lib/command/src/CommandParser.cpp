@@ -58,8 +58,8 @@ Command parseCommand(const uint8_t *buffer, size_t size)
 
   if (size > 3)
   {
-    cmd.paramLength = size - 3;
-    memcpy(cmd.params, buffer + 2, cmd.paramLength);
+    cmd.paramLength = size - 3; // cmd.paramLength is the size of the buffer minus the command type and id
+    memcpy(cmd.params, buffer + 3, cmd.paramLength); // cmd.params is the buffer starting from the 4th element because the first 3 elements are the command type and id
   }
 
   return cmd;
