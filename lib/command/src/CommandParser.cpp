@@ -6,13 +6,13 @@ Command parseCommand(const uint8_t *buffer, size_t size)
   Command cmd;
   cmd.paramLength = 0;
 
-  if (size < 3 || buffer[0] != STX || buffer[size - 1] != ETX)
+  if (size < 2)
   {
     cmd.type = CMD_UNKNOWN;
     return cmd;
   }
 
-  uint8_t commandType = buffer[1];
+  uint8_t commandType = buffer[0];
 
   switch (commandType)
   {
@@ -54,12 +54,12 @@ Command parseCommand(const uint8_t *buffer, size_t size)
     break;
   }
 
-  cmd.id = (buffer[2] << 8) | buffer[3];
+  cmd.id = (buffer[1] << 8) | buffer[2];
 
-  if (size > 5)
+  if (size > 3)
   {
-    cmd.paramLength = size - 5;
-    memcpy(cmd.params, buffer + 4, cmd.paramLength);
+    cmd.paramLength = size - 3;
+    memcpy(cmd.params, buffer + 2, cmd.paramLength);
   }
 
   return cmd;

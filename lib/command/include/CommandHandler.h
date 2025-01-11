@@ -45,7 +45,7 @@ public:
      */
     static void inline sendErr(uint8_t errCode)
     {
-        uint8_t errResponse[3] = {SERTX, errCode, EERTX};
+        uint8_t errResponse[1] = {errCode};
 #ifdef PIO_UNIT_TESTING
         memcpy(testBuffer, errResponse, sizeof(errResponse));
 #else
@@ -61,16 +61,15 @@ public:
      */
     static void inline sendResponse(uint8_t cmd, uint16_t id, const uint8_t *data, size_t length)
     {
-        uint8_t response[64] = {STX, cmd, highByte(id), lowByte(id)};
+        uint8_t response[64] = {cmd, highByte(id), lowByte(id)};
         if (length > 0)
         {
-            memcpy(response + 4, data, length);
+            memcpy(response + 3, data, length);
         }
-        response[length + 4] = ETX;
 #ifdef PIO_UNIT_TESTING
-        memcpy(testBuffer, response, length + 5);
+        memcpy(testBuffer, response, length + 3);
 #else
-        _packetSerial->send(response, length + 5);
+        _packetSerial->send(response, length + 3);
 #endif
     };
 
