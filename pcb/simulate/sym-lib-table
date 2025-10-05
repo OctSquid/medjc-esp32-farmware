@@ -1,0 +1,4 @@
+(sym_lib_table
+  (version 7)
+  (lib (name "NJM2747D")(type "KiCad")(uri "${KIPRJMOD}/lib/NJM2747D/NJM2747D.kicad_sym")(options "")(descr ""))
+)
