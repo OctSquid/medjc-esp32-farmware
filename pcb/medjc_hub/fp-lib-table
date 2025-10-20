@@ -5,4 +5,5 @@
   (lib (name "MCP3208-CI_P")(type "KiCad")(uri "${KIPRJMOD}/lib/MCP3208-CI_P")(options "")(descr ""))
   (lib (name "GF063")(type "KiCad")(uri "${KIPRJMOD}/lib/GF063")(options "")(descr ""))
   (lib (name "LAB-LOGO")(type "KiCad")(uri "${KIPRJMOD}/lib/LAB-LOGO")(options "")(descr ""))
+  (lib (name "Seeed Studio XIAO Series Library")(type "KiCad")(uri "${KIPRJMOD}/lib/Seeed Studio XIAO Series Library")(options "")(descr ""))
 )
