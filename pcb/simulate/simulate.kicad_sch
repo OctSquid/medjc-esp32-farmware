@@ -3068,7 +3068,7 @@
 				(hide yes)
 			)
 		)
-		(property "Sim.Library" "lib/NJM2737/njm2737_v2.lib"
+		(property "Sim.Library" "lib/NJU7034/nju7034_v1.lib"
 			(at 130.81 71.12 0)
 			(effects
 				(font
@@ -3077,7 +3077,7 @@
 				(hide yes)
 			)
 		)
-		(property "Sim.Name" "NJM2737"
+		(property "Sim.Name" "NJU7034"
 			(at 130.81 71.12 0)
 			(effects
 				(font
